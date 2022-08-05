@@ -7,7 +7,15 @@ defineProps<{
 </script>
 
 <template>
-  <div class="tile">{{ tile.letter ?? "x" }}</div>
+  <div
+    :class="{
+      tile: true,
+      correct: tile.state === 'correct',
+      incorrect: tile.state === 'incorrect',
+    }"
+  >
+    {{ tile.letter ?? "" }}
+  </div>
 </template>
 
 <style scoped>
@@ -18,5 +26,13 @@ defineProps<{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.correct {
+  background-color: #68e88a;
+}
+
+.incorrect {
+  background-color: #bbbfbc;
 }
 </style>
