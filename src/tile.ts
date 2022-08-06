@@ -7,4 +7,8 @@ export class Tile {
   public clearLetter() {
     this.letter = undefined;
   }
+
+  public get hasLetter(): boolean {
+    return !!this.letter;
+  }
 }

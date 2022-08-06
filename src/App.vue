@@ -18,7 +18,7 @@ const state = reactive<GameState>({
   board: [],
 });
 
-// reset board when any state parameters change
+// reset board when any relevant state changes
 watch(
   () => [state.word, state.numberOfRows],
   () => {
@@ -39,15 +39,13 @@ watch(
 
 window.addEventListener("keydown", (event) => {
   const key = event.key.toLowerCase();
-  const lettersGuessed =
-    state.board[state.currentRowIndex]?.filter(
-      ({ letter }) => letter !== undefined
-    ).length ?? 0;
+  const currentRow = state.board[state.currentRowIndex];
+  const lettersGuessed = currentRow.filter((tile) => tile.hasLetter).length;
 
   if (key === "enter" && lettersGuessed === state.word.length) {
     let correctGuesses = 0;
 
-    state.board[state.currentRowIndex]?.forEach((tile, idx) => {
+    currentRow.forEach((tile, idx) => {
       if (tile.letter === state.word[idx]) {
         tile.state = "correct";
         correctGuesses++;
@@ -68,8 +66,8 @@ window.addEventListener("keydown", (event) => {
     // note: board is a 2d array, so a shallow clone maintains
     // reference to nested arrays
     const lastTileWithGuess = deepArrayClone(state.board)
-      [state.currentRowIndex]?.reverse()
-      .find(({ letter }) => letter !== undefined);
+      [state.currentRowIndex].reverse()
+      .find((tile) => tile.hasLetter);
 
     if (lastTileWithGuess) {
       lastTileWithGuess.clearLetter();
@@ -85,9 +83,7 @@ window.addEventListener("keydown", (event) => {
     key.length === 1 &&
     lettersGuessed !== state.word.length
   ) {
-    const nextTile = state.board[state.currentRowIndex]?.find(
-      ({ letter }) => letter === undefined
-    );
+    const nextTile = currentRow.find((tile) => !tile.hasLetter);
     if (nextTile) {
       nextTile.letter = key;
     }
