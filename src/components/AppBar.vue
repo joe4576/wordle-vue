@@ -18,7 +18,7 @@ defineEmits<{
 <style scoped>
 header {
   width: 100vw;
-  background-color: #8561c7;
+  background-color: var(--primary-colour);
   box-shadow: 0 5px 10px #bbb;
   margin-bottom: 30px;
 }

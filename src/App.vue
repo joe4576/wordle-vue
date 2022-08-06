@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import Board from "@/components/Board.vue";
 import AppBar from "@/components/AppBar.vue";
+import ModalDialog from "@/components/base/ModalDialog.vue";
 import { Tile } from "@/tile";
 import { deepArrayClone } from "@/utils";
-import { reactive, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 
 interface GameState {
   word: string;
@@ -18,6 +19,8 @@ const state = reactive<GameState>({
   currentRowIndex: 0,
   board: [],
 });
+
+const showResetDialog = ref(false);
 
 // reset board when any relevant state changes
 watch(
@@ -91,22 +94,34 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
-const handleReset = () => {
+const reset = () => {
   console.log("reset");
 };
 </script>
 
 <template>
   <main>
-    <app-bar @reset="handleReset" />
+    <app-bar @reset="showResetDialog = true" />
     <div class="main-container">
       <board :tiles="state.board" />
     </div>
+    <modal-dialog v-model="showResetDialog" title="Reset" @confirm="reset">
+      Are you sure you want to reset? Progress will be lost and a new word will
+      be selected
+      <template #actions="{ confirm }">
+        <button class="button-text" @click="confirm">CONFIRM</button>
+      </template>
+    </modal-dialog>
   </main>
 </template>
 
 <style>
 /* App-wide styles */
+
+:root {
+  --primary-colour: #8561c7;
+}
+
 #app {
   display: flex;
   justify-content: center;
@@ -120,5 +135,13 @@ body {
 .main-container {
   display: flex;
   justify-content: center;
+}
+
+.button-text {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--primary-colour);
+  font-weight: bold;
 }
 </style>
