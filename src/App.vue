@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Board from "@/components/Board.vue";
+import AppBar from "@/components/AppBar.vue";
 import { Tile } from "@/tile";
 import { deepArrayClone } from "@/utils";
 import { reactive, watch } from "vue";
@@ -89,20 +90,35 @@ window.addEventListener("keydown", (event) => {
     }
   }
 });
+
+const handleReset = () => {
+  console.log("reset");
+};
 </script>
 
 <template>
   <main>
+    <app-bar @reset="handleReset" />
     <div class="main-container">
       <board :tiles="state.board" />
     </div>
   </main>
 </template>
 
-<style scoped>
-.main-container {
+<style>
+/* App-wide styles */
+#app {
   display: flex;
   justify-content: center;
   max-width: 1200px;
+}
+
+body {
+  margin-top: 0;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
 }
 </style>

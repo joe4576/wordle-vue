@@ -27,7 +27,7 @@ const generateRows = (): VNode[][] => {
 const renderBoard = (): VNode =>
   h(
     "div",
-    { class: "container" },
+    { class: "board" },
     generateRows().map((row) => h("div", { class: "row" }, [...row]))
   );
 </script>
