@@ -22,24 +22,22 @@ const state = reactive<GameState>({
 
 const showResetDialog = ref(false);
 
-// reset board when any relevant state changes
-watch(
-  () => [state.word, state.numberOfRows],
-  () => {
-    const board: Tile[][] = [];
+const reset = () => {
+  const board: Tile[][] = [];
 
-    for (let i = 0; i < state.numberOfRows; i++) {
-      board[i] = [];
-      for (let j = 0; j < state.word.length; j++) {
-        board[i][j] = new Tile();
-      }
+  for (let i = 0; i < state.numberOfRows; i++) {
+    board[i] = [];
+    for (let j = 0; j < state.word.length; j++) {
+      board[i][j] = new Tile();
     }
+  }
 
-    state.board = board;
-    state.currentRowIndex = 0;
-  },
-  { immediate: true }
-);
+  state.board = board;
+  state.currentRowIndex = 0;
+};
+
+// reset board when any relevant state changes
+watch(() => [state.word, state.numberOfRows], reset, { immediate: true });
 
 window.addEventListener("keydown", (event) => {
   const key = event.key.toLowerCase();
@@ -93,10 +91,6 @@ window.addEventListener("keydown", (event) => {
     }
   }
 });
-
-const reset = () => {
-  console.log("reset");
-};
 </script>
 
 <template>
