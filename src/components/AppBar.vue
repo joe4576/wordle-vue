@@ -33,5 +33,6 @@ header {
 h1 {
   font-size: 1.5rem;
   font-family: Arial, Helvetica, sans-serif;
+  font-weight: lighter;
 }
 </style>
