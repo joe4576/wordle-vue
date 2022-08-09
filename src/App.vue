@@ -3,9 +3,9 @@ import Board from "@/components/Board.vue";
 import AppBar from "@/components/AppBar.vue";
 import ModalDialog from "@/components/base/ModalDialog.vue";
 import { Tile } from "@/tile";
-import { deepArrayClone } from "@/utils";
-import { onMounted, reactive, ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import words from "@/assets/words.js";
+import cloneDeep from "lodash.clonedeep";
 
 interface GameState {
   word: string;
@@ -75,9 +75,9 @@ window.addEventListener("keydown", (event) => {
   }
 
   if (key === "backspace" && lettersGuessed > 0) {
-    // note: board is a 2d array, so a shallow clone maintains
-    // reference to nested arrays
-    const lastTileWithGuess = deepArrayClone(state.board)
+    // note: board is a 2d array, so normal shallow clone
+    // will retain references to nested arrays
+    const lastTileWithGuess = cloneDeep(state.board)
       [state.currentRowIndex].reverse()
       .find((tile) => tile.hasLetter);
 
