@@ -11,6 +11,7 @@ interface GameState {
   numberOfRows: number;
   currentRowIndex: number;
   board: Tile[][];
+  hasWon: boolean;
 }
 
 const state = reactive<GameState>({
@@ -18,6 +19,7 @@ const state = reactive<GameState>({
   numberOfRows: 6,
   currentRowIndex: 0,
   board: [],
+  hasWon: false,
 });
 
 const showResetDialog = ref(false);
@@ -34,12 +36,17 @@ const reset = () => {
 
   state.board = board;
   state.currentRowIndex = 0;
+  state.hasWon = false;
 };
 
 // reset board when any relevant state changes
 watch(() => [state.word, state.numberOfRows], reset, { immediate: true });
 
 window.addEventListener("keydown", (event) => {
+  if (state.hasWon) {
+    return;
+  }
+
   const key = event.key.toLowerCase();
   const currentRow = state.board[state.currentRowIndex];
   const lettersGuessed = currentRow.filter((tile) => tile.hasLetter).length;
@@ -57,7 +64,8 @@ window.addEventListener("keydown", (event) => {
     });
 
     if (correctGuesses === state.word.length) {
-      // won
+      state.hasWon = true;
+      return;
     }
 
     state.currentRowIndex++;
@@ -98,12 +106,19 @@ window.addEventListener("keydown", (event) => {
     <app-bar @reset="showResetDialog = true" />
     <div class="main-container">
       <board :tiles="state.board" />
+      <div v-if="state.hasWon" id="win">
+        <h2>Congrats, you've guessed correctly!</h2>
+        <p>
+          You guessed "{{ state.word }}" in {{ state.currentRowIndex + 1 }}
+          {{ state.currentRowIndex === 0 ? "attempt" : "attempts" }}
+        </p>
+      </div>
     </div>
     <modal-dialog v-model="showResetDialog" title="Reset" @confirm="reset">
       Are you sure you want to reset? Progress will be lost and a new word will
       be selected
       <template #actions="{ confirm }">
-        <button class="button-text" @click="confirm">CONFIRM</button>
+        <button class="button-text" @click="confirm">Confirm</button>
       </template>
     </modal-dialog>
   </main>
@@ -129,7 +144,9 @@ body {
 
 .main-container {
   display: flex;
-  justify-content: center;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
 }
 
 .button-text {
@@ -138,5 +155,13 @@ body {
   cursor: pointer;
   color: var(--primary-colour);
   font-weight: bold;
+  text-transform: uppercase;
+}
+
+.main-container > #win {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

@@ -41,7 +41,7 @@ const confirmFunc = () => {
       </div>
       <div id="body"><slot /></div>
       <div id="footer">
-        <button class="button-text" @click="dialogIsOpen = false">CLOSE</button>
+        <button class="button-text" @click="dialogIsOpen = false">Close</button>
         <slot name="actions" :confirm="confirmFunc" />
       </div>
     </div>
