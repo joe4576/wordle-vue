@@ -4,7 +4,8 @@ import AppBar from "@/components/AppBar.vue";
 import ModalDialog from "@/components/base/ModalDialog.vue";
 import { Tile } from "@/tile";
 import { deepArrayClone } from "@/utils";
-import { reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
+import words from "@/assets/words.js";
 
 interface GameState {
   word: string;
@@ -37,10 +38,11 @@ const reset = () => {
   state.board = board;
   state.currentRowIndex = 0;
   state.hasWon = false;
+  state.word = words[Math.floor(Math.random() * words.length) + 1];
 };
 
 // reset board when any relevant state changes
-watch(() => [state.word, state.numberOfRows], reset, { immediate: true });
+watch(() => [state.numberOfRows], reset, { immediate: true });
 
 window.addEventListener("keydown", (event) => {
   if (state.hasWon) {
